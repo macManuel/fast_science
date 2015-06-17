@@ -1,0 +1,16 @@
+Project Description:
+The fast_science framework is a collection of libraries for fast computational science. As the name announced the aim is to provide a developer tool to create fast programs. Because of this the library is completely written in C++ as one of the fastest and most distribute languages for scientific purpose. However, fast does not only intend that the library operates fast but also that is can be used easily without long reading of API references. Therefore the naming of the APIs is created as clear as possible always with other developers using this library in mind.
+
+
+Installation:
+The framework includes a makefile for easy installation on UNIX based systems.For easy installation go into the "fast_science" directory and type:
+
+  make
+  (sudo) make install 
+  make clean
+
+Uninstall:
+  (sudo) make uninstall	
+
+Bug Report:
+Please, report any bug at manuel_tuschen@web.de.
