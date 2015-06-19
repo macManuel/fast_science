@@ -8,7 +8,7 @@
 //
 
 #ifndef include_fs_clap_h
-#define include_fs_eclap_h
+#define include_fs_clap_h
 
 #include "FastScience/clapArgument.h"
 #include "FastScience/clapSingleArgument.h"
