@@ -120,7 +120,8 @@ void fs::WigReader::readFromFile(std::list<fs::BedgraphFormat> & data) {
           if (found != std::string::npos) {
             line = line.substr(found+1);
             found = line.find(this->_defaultDelimiter);
-            start = static_cast<unsigned int>(std::stoul(line.substr(0, found)));
+            // Be aware that -1 must be substracted to convert to bedgraph format!
+            start = static_cast<unsigned int>(std::stoul(line.substr(0, found))) - 1;
           }
           
           //step
@@ -154,15 +155,19 @@ void fs::WigReader::readFromFile(std::list<fs::BedgraphFormat> & data) {
         
         // for variable data
         if (variable_step) {
-          tmp_bedgraph.setChromStart(static_cast<unsigned int>(std::stoul(line.substr(0, found))));
-          tmp_bedgraph.setChromEnd(static_cast<unsigned int>(std::stoul(line.substr(0, found)))+span);
+          // Be aware that -1 must be substracted to convert to bedgraph format!
+          start = static_cast<unsigned int>(std::stoul(line.substr(0, found))) -1;
+          tmp_bedgraph.setChromStart(start);
+          // Be aware that we have a half open intervall !
+          tmp_bedgraph.setChromEnd(start + span);
           line = line.substr(found+1);
           tmp_bedgraph.setScore(std::stod(line));
           
           // for fixed step
         } else {
           tmp_bedgraph.setChromStart(start);
-          tmp_bedgraph.setChromEnd(start+span);
+          // Be aware that we have a half open intervall !
+          tmp_bedgraph.setChromEnd(start + span);
           start += step;
           
           tmp_bedgraph.setScore(std::stod(line));

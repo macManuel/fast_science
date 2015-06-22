@@ -3,7 +3,7 @@
 //  fast_science
 //
 //
-//  Created by Manuel on 12.06.15.
+//  Created by Manuel on 20.06.15.
 //
 //
 
@@ -31,7 +31,6 @@ fs::WigWriter::~WigWriter() {
 }
 
 
-
 void fs::WigWriter::writeIntoFile(std::list<fs::BedgraphFormat> const & data) {
   
   try {
@@ -44,31 +43,32 @@ void fs::WigWriter::writeIntoFile(std::list<fs::BedgraphFormat> const & data) {
       
       // wirting wig fles is a bit more tricky because we need to know if we can use fixed step or must use variable step
       
-      unsigned int span = data.begin()->chromEnd() - data.begin()->chromStart() + 1;
+      unsigned int span = data.begin()->chromEnd() - data.begin()->chromStart();
       bool spanIsConstant = true;
-      auto begin_pp = data.begin();
-      ++begin_pp;
-      unsigned int step = begin_pp->chromStart() - data.begin()->chromStart();
+      
+      auto next = data.begin();
+      ++next;
+      unsigned int step = next->chromStart() - data.begin()->chromStart();
       bool stepIsFixed = true;
+      
       std::string chromosome = data.begin()->chrom();
       
+      
       // remember the start end ending for one chromosome.
-      auto start_ptr = data.begin();
-      auto end_ptr = data.begin();
+      auto start_ptr = data.cbegin();
+      auto end_ptr = data.cend();
       
-      
-      // check for each chromosome what steps and which output can be used
-      for (auto it = data.begin(); it != data.end(); ++it) {
+      // go through all the data
+      while (start_ptr != data.cend()) {
+  
+ 
+        // check for each chromosome what steps and which output can be used
+        auto tmp = start_ptr;
         
-        
-        // make sure that we do not get into trouble at the end of the chromosome or list.
-        auto tmp = it;
-        ++tmp;
-        
-        if (tmp->chrom() == chromosome && tmp != data.end()) {
-          // clculate the span of each enty
-          unsigned int tmp_span = it->chromEnd() - it->chromStart() + 1;
-          unsigned int tmp_step = tmp->chromStart() - it->chromStart();
+        while (tmp->chrom() == chromosome && tmp != data.end()) {
+          // clculate the span of each entry
+          unsigned int tmp_span = tmp->chromEnd() - tmp->chromStart();
+          unsigned int tmp_step = tmp->chromStart() - next->chromStart();
           
           if (tmp_span != span) {
             spanIsConstant = false;
@@ -78,10 +78,12 @@ void fs::WigWriter::writeIntoFile(std::list<fs::BedgraphFormat> const & data) {
             stepIsFixed = false;
             spanIsConstant = false;
           }
-        
-        } else {
-          end_ptr = tmp;
+          
+          tmp++;
+          next++;
         }
+        
+        end_ptr = tmp;
         
         // after collecting the data for one chromosome start printing
         // if there is no constant span the data are written out with span = 1
@@ -96,59 +98,46 @@ void fs::WigWriter::writeIntoFile(std::list<fs::BedgraphFormat> const & data) {
         if (stepIsFixed == true) {
           datafile << "fixedStep" << this->_delimiter;
           datafile << "chrom=" << chromosome << this->_delimiter;
-          datafile << "start=" << start_ptr->chromStart() << this->_delimiter;
-          datafile << "step=" << start_ptr->chromStart() << this->_delimiter;
-          datafile << "span=" << start_ptr->chromStart() << "\n";
+          // Be aware that or wig files the first position is 1  and not 0 as in bedgraph!
+          datafile << "start=" << start_ptr->chromStart()+1 << this->_delimiter;
+          datafile << "step=" << step << this->_delimiter;
+          datafile << "span=" << span << "\n";
         } else {
           
           // for the variable case
           datafile << "variableStep" << this->_delimiter;
           datafile << "chrom=" << chromosome << this->_delimiter;
-          datafile << "span=" << start_ptr->chromStart() << "\n";
+          datafile << "span=" << span << "\n";
         }
         
         
         // second, the output as far as we can
         
-        for (auto jt = start_ptr; jt != end_ptr; ++jt) {
+        for (start_ptr; start_ptr != end_ptr; ++start_ptr) {
           
           if (stepIsFixed == true) {
-            // for the fixed case we must have a constant span per definition
-            datafile << jt->score() << "\n";
+            // for the fixed case
+            datafile << start_ptr->score() << "\n";
           } else {
           
-            // the variable case with constant span is also easy to handle
-            if (spanIsConstant == true) {
-              
-              datafile << jt->chromStart() << this->_delimiter << jt->score() << "\n";
-            } else {
-              
-              // this case is a bit more tricky
-            
-              unsigned int start = jt->chromStart();
-              
-              while (start != jt->chromEnd()) {
-                datafile << start << this->_delimiter << jt->score() << "\n";
-                start++;
-              }
-              datafile << start << this->_delimiter << jt->score() << "\n";
-            }
+            // for the variable case
+              datafile << start_ptr->chromStart() + 1 << this->_delimiter << start_ptr->score() << "\n";
           }
         }
         
         
         // before continuing update for the next chromosome
-        
-        span = tmp->chromEnd() - tmp->chromStart() + 1;
+        span = end_ptr->chromEnd() - end_ptr->chromStart();
         spanIsConstant = true;
-        auto tmp_pp = tmp;
-        tmp_pp++;
-        step = (tmp_pp)->chromStart() - tmp->chromStart();
+        
+        next++;
+        step = next->chromStart() - end_ptr->chromStart();
         stepIsFixed = true;
-        chromosome = tmp->chrom();
+        
+        chromosome = end_ptr->chrom();
         
         // remember the start end ending for one chromosome.
-        start_ptr = tmp;
+        start_ptr = end_ptr;
       }
       
       datafile.close();

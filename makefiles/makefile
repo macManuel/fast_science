@@ -4,9 +4,9 @@ PREFIX =  /usr/local
 CC = g++
 CFLAGS = -std=c++11 -Wall
 
-HEADERS = exception.h string_functions.h print_functions.h format.h csvFormat.h gffFormat.h bedgraphFormat.h reader.h csvReader.h gffReader.h bedgraphReader.h wigReader.h writer.h csvWriter.h gffWriter.h bedgraphWriter.h wigWriter.h clapArgument.h clapSingleArgument.h clapMultiArgument.h commandlineParser.h
+HEADERS = exception.h string_functions.h print_functions.h format.h csvFormat.h gffFormat.h bedgraphFormat.h fileChecker.h reader.h csvReader.h gffReader.h bedgraphReader.h wigReader.h writer.h csvWriter.h gffWriter.h bedgraphWriter.h wigWriter.h clapArgument.h clapSingleArgument.h clapMultiArgument.h commandlineParser.h distribution.h
 
-OBJECTS = exception.o string_functions.o print_functions.o format.o csvFormat.o gffFormat.o bedgraphFormat.o reader.o csvReader.o gffReader.o bedgraphReader.o wigReader.o writer.o csvWriter.o gffWriter.o bedgraphWriter.o wigWriter.o clapArgument.o clapSingleArgument.o clapMultiArgument.o commandlineParser.o
+OBJECTS = exception.o string_functions.o print_functions.o format.o csvFormat.o gffFormat.o bedgraphFormat.o fileChecker.o  reader.o csvReader.o gffReader.o bedgraphReader.o wigReader.o writer.o csvWriter.o gffWriter.o bedgraphWriter.o wigWriter.o clapArgument.o clapSingleArgument.o clapMultiArgument.o commandlineParser.o distribution.o
 
 
 
@@ -35,6 +35,9 @@ gffFormat.o: format.h format.o gffFormat.h gffFormat.cpp
 
 bedgraphFormat.o: format.h format.o bedgraphFormat.h bedgraphFormat.cpp
 	$(CC) $(CFLAGS)  -o bedgraphFormat.o -c bedgraphFormat.cpp
+
+fileChecker.o: fileChecker.h fileChecker.cpp
+		$(CC) $(CFLAGS)  -o fileChecker.o -c fileChecker.cpp
 
 reader.o: reader.h reader.cpp
 	$(CC) $(CFLAGS)  -o Reader.o -c Reader.cpp
@@ -78,6 +81,9 @@ clapMultiArgument.o :clapArgument.h clapArgument.o commandlineParser.h commandli
 
 commandlineParser.o : clapArgument.h clapArgument.o commandlineParser.h commandlineParser.cpp
 	$(CC) $(CFLAGS)  -o commandlineParser.o -c commandlineParser.cpp
+
+distribution.o : distribution.h distribution.cpp
+	$(CC) $(CFLAGS) -o distribution.o -c distribution.cpp
 
 
 install:

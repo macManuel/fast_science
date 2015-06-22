@@ -31,12 +31,12 @@ namespace fs {
     std::string* _chrom;
     
     /**
-     *  The starting position inside the chromosome. This value must be set.
+     *  The starting position of the bin. The first position is 0!
      */
     unsigned int _chromStart;
     
     /**
-     *  The end position inside the chromosome. This value must be set.
+     *  The end position of the bin but which is not included !
      */
     unsigned int _chromEnd;
     

@@ -10,6 +10,8 @@
 #ifndef include_fs_io_h
 #define include_fs_io_h
 
+#include "FastScience/fileChecker.h"
+
 #include "FastScience/reader.h"
 #include "FastScience/csvReader.h"
 #include "FastScience/gffReader.h"

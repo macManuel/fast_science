@@ -44,12 +44,12 @@ namespace fs {
     std::string* _feature;
     
     /**
-     *  The start position of the sequence with the first position being 1.
+     *  The start position of the sequence with the first position being 1!
      */
     unsigned int _start;
     
     /**
-     *  The end position of the sequence.
+     *  The last position of the sequence which is included in the intervall!
      */
     unsigned int _end;
     

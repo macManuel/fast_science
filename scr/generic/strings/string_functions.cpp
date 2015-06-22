@@ -21,13 +21,13 @@ bool fs::string_contains_string (std::string const & str1, std::string const &  
 
 
 
-void capitalize_string (std::string & str) {
+void fs::capitalize_string (std::string & str) {
   std::transform(str.begin(), str.end(), str.begin(), toupper);
 }
 
 
 
-void lowercase_string (std::string & str) {
+void fs::lowercase_string (std::string & str) {
     std::transform(str.begin(), str.end(), str.begin(), tolower);
 }
 

@@ -221,12 +221,21 @@ void fs::CommandlineParser::printHelp() {
   
   for (auto it = this->_argumentList->cbegin(); it != this->_argumentList->cend(); ++it) {
     
+    if ((*it)->isRequired() == false && (*it)->isSwitch() == true) {
+      space_print(std::cout, "-" + (*it)->flag(), 75, 3, 3 );
+      space_print(std::cout, (*it)->longDescription(), 75, 15, 0 );
+      std::cout << std::endl;
+    }
+  }
+  for (auto it = this->_argumentList->cbegin(); it != this->_argumentList->cend(); ++it) {
+    
     if ((*it)->isRequired() == false && (*it)->isSwitch() == false) {
       space_print(std::cout, "--" + (*it)->flag(), 75, 3, 3 );
       space_print(std::cout, (*it)->longDescription(), 75, 15, 0 );
       std::cout << std::endl;
     }
   }
+  
 }
 
 
