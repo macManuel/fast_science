@@ -239,7 +239,7 @@ void fs::GffFormat::setEnd(unsigned int end) {
 void fs::GffFormat::setScore(double score) {
 
   _score = score;
-  _hasStrand = true;
+  _hasScore = true;
 }
 
 void fs::GffFormat::setScore() {

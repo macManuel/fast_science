@@ -159,8 +159,14 @@ void fs::CommandlineParser::parse(int argc, const char * const * argv) {
           
         } else {
           
-          // set the switch accordingly
-          _argumentMap->at(lastArg)->setValue("true");
+          // it must be one or more boolean switches
+          current = current.substr(1);
+
+          while (current.length()>=1) {
+            lastArg = current.substr(0,1);
+            _argumentMap->at(lastArg)->setValue("1");
+            current = current.substr(1);
+          }
           // last argument should be empty, as there can no values be set
           lastArg.clear();
         }

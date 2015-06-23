@@ -29,7 +29,7 @@ fs::ClapSingleArgument<T>::ClapSingleArgument(fs::CommandlineParser & parser, st
 template <>
 fs::ClapSingleArgument<bool>::ClapSingleArgument(fs::CommandlineParser & parser, char const & flag, std::string const & usageDescription, std::string const & longDescription, bool isRequired, bool isSwitch) : ClapArgument(flag, usageDescription, longDescription, isRequired, isSwitch) {
   
-  _value = new bool;
+  _value = new bool(false);
   
   _valueConstraints = new std::set<bool>();
   _valueConstraints->insert(true);
@@ -73,7 +73,7 @@ void fs::ClapSingleArgument<T>::setValue(std::string const & valueRead) {
     if (isValid(toSet)) {
       *this->_value = toSet;
     }
-  
+
     this->_isSet = true;
   }
 }
